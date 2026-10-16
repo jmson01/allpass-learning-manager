@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>올패스 학습매니저 | 학습현황</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--bg2:#f5f7fb;--ink:#1a1f36;--navy:#1f2a5c;--blue:#1e6bff;--blue2:#e6efff;--red:#e5392b;--mute:#6b7690;--line:#dde3ef;--on:#fff;--ok:#12a37f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10142a;--bg2:#181e3d;--ink:#e8ecf8;--navy:#c9d3ff;--blue:#5b92ff;--blue2:#1f2a5c;--red:#ff6a5c;--mute:#9aa5c4;--line:#2d3560;--ok:#34c9a3}}
+:root[data-theme="dark"]{--bg:#10142a;--bg2:#181e3d;--ink:#e8ecf8;--navy:#c9d3ff;--blue:#5b92ff;--blue2:#1f2a5c;--red:#ff6a5c;--mute:#9aa5c4;--line:#2d3560;--ok:#34c9a3}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.top{border-bottom:1px solid var(--line);padding:14px 24px;display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.top b{font-size:22px;color:var(--navy)}.top nav{display:flex;gap:22px;font-weight:500;font-size:14px;flex-wrap:wrap}
+.wrap{max-width:960px;margin:0 auto;padding:28px 24px 48px}
+.side{border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13px}
+.side h4{margin:0;padding:16px;background:var(--mute);color:var(--on);text-align:center;font-size:16px}
+.side div{padding:10px 14px;border-top:1px solid var(--line);color:var(--mute)}.side div.on{color:var(--blue);font-weight:700}
+.sky{display:grid;gap:10px;font-size:12px;text-align:center}
+.sky div{border:1px solid var(--line);border-radius:10px;padding:14px 8px;color:var(--mute)}
+.sky .new{background:var(--red);color:var(--on);border:0;font-weight:700;padding:22px 8px;box-shadow:0 0 0 3px color-mix(in srgb,var(--red) 25%,transparent)}
+h1{font-size:24px;margin:0 0 4px;color:var(--navy)}
+.chip{display:inline-block;background:var(--blue2);color:var(--blue);border-radius:99px;padding:2px 10px;font-size:12px;font-weight:700;vertical-align:middle;margin-left:6px}
+.sub{color:var(--mute);margin:0 0 16px;font-size:14px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:8px 0}
+.tabs button{display:flex;align-items:center;gap:14px;text-align:left;border:2px solid var(--line);background:var(--bg);padding:14px 18px;border-radius:14px;color:var(--ink);transition:background .15s,border-color .15s}
+.tabs button:hover{border-color:var(--blue)}
+.tabs .ic{flex:none;width:44px;height:44px;border-radius:12px;background:var(--blue2);display:grid;place-items:center;font-size:22px}
+.tabs strong{display:block;font-size:17px;line-height:1.3}
+.tabs small{display:block;font-size:12px;color:var(--mute);margin-top:2px}
+@media (max-width:640px){.tabs button{padding:10px 12px;gap:10px}.tabs small{display:none}.tabs .ic{width:36px;height:36px;font-size:18px}.tabs strong{font-size:15px}}
+.tabs button[aria-selected="true"]{background:var(--navy);border-color:var(--navy);color:var(--bg);box-shadow:0 6px 16px color-mix(in srgb,var(--navy) 25%,transparent)}
+.tabs button[aria-selected="true"] small{color:var(--bg);opacity:.8}
+.tabs button[aria-selected="true"] .ic{background:color-mix(in srgb,var(--bg) 18%,transparent)}
+.card{border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px;background:var(--bg)}
+.card h2{font-size:17px;margin:0 0 12px;color:var(--navy);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.card h2 small{font-size:12px;color:var(--mute);font-weight:400}
+.hello{background:var(--navy);color:var(--bg);border:0}.hello h2{color:inherit}
+.hello p{margin:0 0 14px;opacity:.85}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kpi{background:color-mix(in srgb,var(--bg) 14%,transparent);border-radius:10px;padding:12px}
+.kpi span{display:block;font-size:12px;opacity:.8}.kpi strong{font-size:22px}.kpi em{font-style:normal;font-size:12px;opacity:.8}
+.row{display:grid;grid-template-columns:90px minmax(0,1.6fr) 1.2fr 92px;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.tag{white-space:nowrap;font-size:11px;font-weight:700;background:var(--blue2);color:var(--blue);padding:2px 8px;border-radius:6px;text-align:center}
+.nm strong{display:block;font-size:14px}.nm small{color:var(--mute);font-size:12px}
+.pg{display:grid;grid-template-columns:1fr 40px;gap:8px;align-items:center;font-size:13px;font-weight:700}
+.tr{height:9px;background:var(--line);border-radius:6px;overflow:hidden}.tr i{display:block;height:100%;background:var(--blue);border-radius:6px}.tr.g i{background:var(--mute)}
+.btn{border:1px solid var(--blue);background:var(--bg);color:var(--blue);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:700}
+.btn.f{background:var(--blue);color:var(--on)}
+select{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:8px;padding:4px 8px;background:var(--bg);color:var(--ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center;font-size:12px}
+.cal .h{color:var(--mute);padding-bottom:2px}
+.cal .d{aspect-ratio:1.15;border-radius:6px;display:grid;place-items:center;background:var(--bg2);color:var(--mute)}
+.cal .l1,.cal .l2,.cal .l3{background:var(--blue);color:#fff;font-weight:700}
+.cal .today{outline:2px solid var(--red);outline-offset:1px}.cal .e{background:none}
+.legend{display:flex;gap:6px;align-items:center;font-size:11px;color:var(--mute);margin-top:10px}.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.mini{display:flex;gap:16px;margin-bottom:12px;font-size:13px;color:var(--mute)}.mini strong{display:block;color:var(--ink);font-size:18px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--bg);padding:4px 12px;font-size:13px}.seg button[aria-pressed="true"]{background:var(--navy);color:var(--bg);font-weight:700}
+.bars{display:flex;align-items:flex-end;gap:8px;height:110px;margin:6px 0 4px}
+.bars div{flex:1;text-align:center;font-size:11px;color:var(--mute);display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.bars i{display:block;background:var(--blue);border-radius:5px 5px 0 0;margin-bottom:4px}
+.rep{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:6px;font-size:14px}.rep b{color:var(--navy)}
+.sw{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:13px;color:var(--mute)}
+.sw button{width:42px;height:24px;border-radius:99px;border:0;background:var(--line);position:relative;padding:0}
+.sw button::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--bg);transition:left .15s}
+.sw button[aria-pressed="true"]{background:var(--blue)}.sw button[aria-pressed="true"]::after{left:21px}
+.live{display:flex;align-items:center;gap:8px;background:var(--blue2);color:var(--blue);padding:10px 14px;border-radius:10px;font-weight:700;margin-bottom:16px}
+.live i{width:9px;height:9px;background:var(--ok);border-radius:50%;display:inline-block}
+.rank{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.rk{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg2)}
+.rk .n{width:30px;height:30px;border-radius:50%;background:var(--blue);color:var(--on);display:grid;place-items:center;font-weight:700;margin-bottom:8px}
+.rk:first-child .n{background:var(--red)}
+.rk strong{display:block;font-size:15px;margin-bottom:2px}.rk small{color:var(--mute);display:block;margin-bottom:10px}
+.cmp{margin-bottom:14px}.cmp .t{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+.cmp .ln{display:grid;grid-template-columns:36px 1fr 52px;gap:8px;align-items:center;font-size:12px;margin:4px 0}
+.pos{text-align:center;padding:6px 0}.pos strong{font-size:38px;color:var(--blue);line-height:1.1;display:block}
+.pt{position:relative;height:10px;background:linear-gradient(90deg,var(--blue),var(--line));border-radius:6px;margin:16px 4px 4px}
+.pt i{position:absolute;top:-5px;width:20px;height:20px;border-radius:50%;background:var(--red);border:3px solid var(--bg);transform:translateX(-50%)}
+.pl{display:flex;justify-content:space-between;font-size:11px;color:var(--mute)}
+.lst{list-style:none;margin:10px 0 0;padding:0}
+.lst li{display:grid;grid-template-columns:36px 1fr auto;gap:10px;padding:9px 6px;border-top:1px solid var(--line);font-size:14px}
+.lst li:first-child{border-top:0}.lst .r{font-weight:700;color:var(--mute)}.lst .r.t3{color:var(--red)}
+.lst .me{background:var(--blue2);border-radius:8px;border-top:0;margin-top:6px;font-weight:700;color:var(--blue)}
+.note{font-size:12px;color:var(--mute);margin:10px 0 0}
+
+@media (max-width:640px){.kpis{grid-template-columns:1fr 1fr}.row{grid-template-columns:56px 1fr}.row>:nth-child(n+3){grid-column:1/-1}.two,.rank{grid-template-columns:1fr}.wrap{padding:16px}}
+
+.hl{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}.hl h2{margin:0}
+.dd{text-align:right;flex:none}.dd strong{font-size:22px;display:block;line-height:1.2}.dd small{font-size:11px;opacity:.8}
+.sj{display:grid;grid-template-columns:110px 1fr;gap:4px 14px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.sj:first-of-type{border-top:0}.sj strong{font-size:14px}.sj .pbar{display:grid;grid-template-columns:1fr 44px;gap:10px;align-items:center;font-weight:700;font-size:13px}
+.sj .meta{grid-column:2;font-size:12px;color:var(--mute);display:flex;gap:14px;flex-wrap:wrap}
+.demo{margin:0 0 12px;font-size:12px;color:var(--mute);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.bsum{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.bsum div{flex:1;min-width:110px;background:var(--bg2);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--mute)}.bsum strong{display:block;font-size:20px;color:var(--ink)}
+.bnext{margin-bottom:16px;font-size:13px}.bnext .tr{margin-top:6px}
+.bgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.bd{text-align:center;border:1px solid var(--line);border-radius:12px;padding:12px 4px;background:var(--bg2);font-size:11px;color:var(--mute)}
+.bd .ic2{width:52px;height:52px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;font-weight:700;font-size:14px;background:var(--line);color:var(--mute)}
+.bd b{display:block;font-size:12px;color:var(--mute)}
+.bd.on{background:var(--bg);border-color:var(--blue)}.bd.on .ic2{background:linear-gradient(135deg,#ffc83d,#ff8a1f);color:#fff;box-shadow:0 4px 10px rgba(255,138,31,.35)}.bd.on b{color:var(--blue)}
+.modal{position:fixed;inset:0;background:rgba(10,14,40,.55);display:grid;place-items:center;z-index:20;padding:20px}.modal[hidden]{display:none}
+.mbox{background:var(--bg);border-radius:18px;padding:28px 24px;width:min(360px,100%);text-align:center}
+.mbox .big{width:88px;height:88px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center;font-size:24px;font-weight:700;color:#fff;background:linear-gradient(135deg,#ffc83d,#ff8a1f)}
+.mbox h3{margin:0 0 6px;font-size:18px;color:var(--navy)}.mbox p{margin:0 0 18px;color:var(--mute);font-size:14px}.mbox .acts{display:flex;gap:8px;justify-content:center}
+.bars .v{font-size:10px;color:var(--ink);white-space:nowrap;margin-bottom:2px}
+.cmw{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--bg2)}
+.cmw textarea{width:100%;min-height:64px;resize:vertical;border:0;background:transparent;font:inherit;color:var(--ink);outline:none}
+.cmf{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--mute)}.cmf button:disabled{opacity:.4;cursor:not-allowed}
+.cml{list-style:none;margin:12px 0;padding:0}.cml li{padding:12px 4px;border-top:1px solid var(--line)}.cml li:first-child{border-top:0}
+.cml .h{display:flex;gap:8px;font-size:12px;color:var(--mute);align-items:center}.cml .h b{color:var(--ink);font-size:13px}
+.cml .del{margin-left:auto;flex:none;border:0;background:none;color:var(--mute);text-decoration:underline;font-size:12px}.cml .h{width:100%}
+.cml p{margin:4px 0 0;font-size:14px;word-break:break-word}.cml li.mine{background:var(--blue2);border-radius:10px;border-top:0;padding:12px 10px;margin:4px 0}
+@media (max-width:640px){.bgrid{grid-template-columns:repeat(3,1fr)}.sj{grid-template-columns:1fr}.sj .meta{grid-column:1}.row{grid-template-columns:90px 1fr}}
+</style>
+</head>
+<body>
+<div class="top"><b>메가변리사</b><span style="color:var(--mute);font-size:14px">올패스 학습매니저 · 제65회 1차</span></div>
+<div class="wrap">
+<main>
+<h1>올패스 학습관리<span class="chip">제65회 1차 올패스</span></h1>
+<p class="sub">내 학습 기록과 같은 올패스 수강생의 현황을 한곳에서 확인하세요. (화면의 수치와 이름은 예시입니다)</p>
+<div class="tabs" role="tablist">
+  <button role="tab" id="tab1" aria-selected="true"><span class="ic">📊</span><span><strong>나의 학습 현황</strong><small>내 진도율 · 출석 · 학습 리포트</small></span></button>
+  <button role="tab" id="tab2" aria-selected="false"><span class="ic">🏆</span><span><strong>올패스 수강생 현황</strong><small>인기 강의 · 평균 비교 · TOP 10 · 응원</small></span></button>
+</div>
+
+<div id="pg1">
+  <div class="card hello">
+    <div class="hl"><h2>○○님, 오늘 1시간 20분 공부했어요</h2><div class="dd"><strong id="dday">D-000</strong><small>* 28.02.26 기준</small></div></div>
+    <div class="kpis">
+      <div class="kpi"><span>오늘 학습시간</span><strong>1h 20m</strong></div>
+      <div class="kpi"><span>한달간 학습시간</span><strong>33h 40m</strong></div>
+      <div class="kpi"><span>총 누적 학습시간</span><strong>120h</strong></div>
+      <div class="kpi"><span>출석일수</span><strong>45일</strong></div>
+      <div class="kpi"><span>연속 출석일수</span><strong>연속 6일</strong></div>
+      <div class="kpi"><span>전체 진도율</span><strong>45%</strong></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>나의 수강중인 강좌 <label class="sub" style="margin:0"><select id="sort"><option value="r">최근 수강순</option><option value="p">진도율 낮은 순</option></select></label></h2>
+    <div id="courses"></div>
+  </div>
+
+
+  <div class="two">
+    <div class="card">
+      <h2>일별 출석체크 <small>2026년 10월</small></h2>
+      <div class="mini"><div><strong>11일</strong>이번 달 출석</div><div><strong>6일</strong>연속 출석</div><div><strong>45일</strong>누적 출석</div></div>
+      <div class="cal" id="cal"></div>
+      <div class="legend"><i style="background:var(--blue)"></i>파란색 날짜는 하루 10분 이상 수강해 출석이 인정된 날이에요.</div>
+    </div>
+    <div class="card">
+      <h2>학습 리포트 <span class="seg"><button id="rw" aria-pressed="true">주간</button><button id="rm" aria-pressed="false">월간</button></span></h2>
+      <div class="bars" id="bars"></div>
+      <ul class="rep" id="rep"></ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>출석 뱃지 <small>누적 출석일 기준</small></h2>
+
+    <div class="bsum"><div><strong id="bsDays">45일</strong>누적 출석</div><div><strong id="bsCnt">3개</strong>획득한 뱃지</div><div><strong id="bsPt">30,000P</strong>받은 M포인트</div></div>
+    <div class="bnext" id="bnext"></div>
+    <div class="bgrid" id="badges"></div>
+    <p class="note">하루 10분 이상 수강하면 출석으로 인정돼요. 뱃지 달성 시 M포인트 10,000P가 지급되며, 뱃지 종류별로 한 번만 받을 수 있어요.</p>
+  </div>
+</div>
+
+<div id="pg2" hidden>
+  
+  <div class="card">
+    <h2>최근 인기 강의 TOP 3 <span class="seg"><button id="lr" aria-pressed="true">일간</button><button id="lw" aria-pressed="false">주간</button></span></h2>
+    <div class="rank" id="rank"></div>
+    <p class="note">같은 회차 올패스 구매 회원 기준 · 일간: 최근 24시간 / 주간: 최근 7일 · 매일 00:00 갱신 (예시 데이터)</p>
+  </div>
+  <div class="two">
+    <div class="card">
+      <h2>나 vs 올패스 평균</h2>
+      <div class="cmp"><div class="t"><b>누적 학습시간</b></div>
+        <div class="ln"><span>나</span><div class="tr"><i style="width:80%"></i></div><b>120h</b></div>
+        <div class="ln"><span>평균</span><div class="tr g"><i style="width:65%"></i></div><span>98h</span></div></div>
+      <div class="cmp"><div class="t"><b>전체 진도율</b></div>
+        <div class="ln"><span>나</span><div class="tr"><i style="width:45%"></i></div><b>45%</b></div>
+        <div class="ln"><span>평균</span><div class="tr g"><i style="width:52%"></i></div><span>52%</span></div></div>
+      <p class="note">업데이트 기준 : 매일 00시</p>
+    </div>
+    <div class="card">
+      <h2>나의 학습 위치</h2>
+      <div class="pos">제65회 올패스 수강생 중<strong>상위 28%</strong>누적 학습시간 기준</div>
+      <div class="pt"><i style="left:28%"></i></div>
+      <div class="pl"><span>하위</span><span>상위</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>TOP 10 <span class="seg"><button id="ta" aria-pressed="true">누적 출석</button><button id="tt" aria-pressed="false">누적 학습시간</button></span></h2>
+    <ul class="lst" id="top"></ul>
+    <p class="note">아이디는 앞 3자리만 노출 · 공동 순위는 같은 순위로 표시 · 매일 00:00 갱신 (예시 데이터)</p>
+  </div>
+  <div class="card">
+    <h2>응원 한마디 <small>같은 회차 올패스 수강생끼리 응원해요 · 총 <b id="cmCnt"></b>개</small></h2>
+    <div class="cmw"><textarea id="cmIn" maxlength="100" placeholder="같은 올패스 수강생에게 응원 한마디를 남겨 보세요 (100자 이내)" aria-label="응원 한마디 입력"></textarea>
+      <div class="cmf"><span id="cmLen">0/100</span><button class="btn f" id="cmBtn" disabled>등록</button></div></div>
+    <p class="note" id="cmMsg">같은 회차 올패스 구매 회원만 볼 수 있고, 비속어는 자동으로 제한돼요.</p>
+    <ul class="cml" id="cmList"></ul>
+    <button class="btn" id="cmMore">더보기</button>
+  </div>
+</div>
+</main>
+</div>
+
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  function pressed(a,b,w){a.setAttribute('aria-pressed',w===1);b.setAttribute('aria-pressed',w===2)}
+  function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+
+  var t1=$('tab1'),t2=$('tab2');
+  function tab(n){$('pg1').hidden=n!==1;$('pg2').hidden=n!==2;t1.setAttribute('aria-selected',n===1);t2.setAttribute('aria-selected',n===2)}
+  t1.onclick=function(){tab(1)};t2.onclick=function(){tab(2)};
+
+  // D-day (시험일 기준 2028.02.26)
+  var d=Math.ceil((new Date(2028,1,26)-new Date())/864e5);$('dday').textContent='D-'+d;
+
+  // courses
+  var courses=[['특허법','특허법 기본강의','박지환',70,0],['물리','물리 핵심정리','김동훈',45,1],['상표법','상표법 기본강의','최지환',38,2],['민법','민법 총칙·물권','정연석',20,3],['디자인보호법','디자인보호법 정리','유시훈',12,4]];
+  function drawCourses(){
+    var l=courses.slice().sort($('sort').value==='p'?function(a,b){return a[3]-b[3]}:function(a,b){return a[4]-b[4]});
+    var box=$('courses');box.textContent='';
+    l.forEach(function(c){
+      var r=el('div','row');r.appendChild(el('span','tag',c[0]));
+      var nm=el('div','nm');nm.appendChild(el('strong','',c[1]));nm.appendChild(el('small','',c[2]));r.appendChild(nm);
+      var pg=el('div','pg'),tr=el('div','tr'),i=el('i');i.style.width=c[3]+'%';tr.appendChild(i);pg.appendChild(tr);pg.appendChild(el('span','',c[3]+'%'));r.appendChild(pg);
+      var btn=el('button','btn f','이어듣기');btn.onclick=function(){alert('실제 강의 연결은 서비스 개발 시 적용됩니다.')};r.appendChild(btn);box.appendChild(r);
+    });
+  }
+  $('sort').onchange=drawCourses;drawCourses();
+
+  // calendar (2026.10, 오늘 14일)
+  var lv={1:1,2:1,4:1,5:1,6:1,7:1,8:1,9:1,12:1,13:1,14:1},cal='';
+  '일월화수목금토'.split('').forEach(function(x){cal+='<div class="h">'+x+'</div>'});
+  for(var i=0;i<4;i++)cal+='<div class="d e"></div>';
+  for(var x=1;x<=31;x++){var c='d'+(lv[x]?' l'+lv[x]:'')+(x===14?' today':'');cal+='<div class="'+c+'">'+x+'</div>'}
+  $('cal').innerHTML=cal;
+
+  // report
+  var data={w:{b:[['월',1.33,'1h 20m'],['화',1,'1h'],['수',0,''],['목',2,'2h'],['금',1.08,'1h 05m'],['토',2.33,'2h 20m'],['일',0.83,'50m']],r:['학습시간 <b>8h 35m</b>','출석 <b>5일</b>','학습시간 변화 <b>+8%</b>','가장 많이 들은 과목 <b>민법</b>']},
+            m:{b:[['1주차',3,'3h'],['2주차',8.33,'8h 20m'],['3주차',10,'10h'],['4주차',10.33,'10h 20m'],['5주차',2,'2h']],r:['학습시간 <b>33h 40m</b>','출석 <b>11일</b>','전월 대비 학습시간 <b>+8%</b>','가장 많이 들은 과목 <b>특허법</b>']}};
+  function rep(k){var dd=data[k],mx=Math.max.apply(null,dd.b.map(function(x){return x[1]}))*1.3,bx=$('bars');bx.textContent='';
+    dd.b.forEach(function(x){var c=el('div');if(x[2])c.appendChild(el('span','v',x[2]));var i=el('i');i.style.height=Math.round(x[1]/mx*80)+'px';c.appendChild(i);c.appendChild(document.createTextNode(x[0]));bx.appendChild(c)});
+    $('rep').innerHTML=dd.r.map(function(x){return '<li>'+x+'</li>'}).join('');pressed($('rw'),$('rm'),k==='w'?1:2)}
+  $('rw').onclick=function(){rep('w')};$('rm').onclick=function(){rep('m')};rep('w');
+
+  // badges (누적 출석일 기준)
+  var TH=[7,14,30,100,200,300];
+  function drawBd(days){
+    var got=TH.filter(function(x){return days>=x}),nxt=TH.filter(function(x){return days<x})[0],g=$('badges');g.textContent='';
+    TH.forEach(function(x){var on=days>=x,b=el('div','bd'+(on?' on':''));b.appendChild(el('div','ic2',x+'일'));b.appendChild(el('b','',on?'획득':'잠금'));b.appendChild(el('span','',on?'+10,000P 지급':x+'일 달성 시'));g.appendChild(b)});
+    $('bsDays').textContent=days+'일';$('bsCnt').textContent=got.length+'개';$('bsPt').textContent=(got.length*10000).toLocaleString()+'P';
+    var bn=$('bnext');bn.textContent='';
+    if(nxt){bn.appendChild(document.createTextNode('다음 뱃지('+nxt+'일)까지 '));bn.appendChild(el('b','',(nxt-days)+'일'));bn.appendChild(document.createTextNode(' 남았어요'));
+      var tr=el('div','tr'),i=el('i');i.style.width=Math.min(100,days/nxt*100)+'%';tr.appendChild(i);bn.appendChild(tr)}
+    else bn.appendChild(el('b','','모든 뱃지를 획득했어요!'));
+  }
+  drawBd(45);
+
+  // popular
+  var pop={r:[['특허법 기본강의','특허법','128회'],['민법 핵심정리','민법','97회'],['상표법 기본강의','상표법','81회']],
+           w:[['민법 기본강의','민법','1,042회'],['상표법 핵심정리','상표법','988회'],['상표법 기본강의','상표법','860회']]};
+  function rank(k){var bx=$('rank');bx.textContent='';pop[k].forEach(function(p,i){var c=el('div','rk');c.appendChild(el('div','n',String(i+1)));c.appendChild(el('strong','',p[0]));c.appendChild(el('small','',p[1]));var btn=el('button','btn',p[2]+' · 강의 보기');btn.onclick=function(){alert('실제 강의 연결은 서비스 개발 시 적용됩니다.')};c.appendChild(btn);bx.appendChild(c)});pressed($('lr'),$('lw'),k==='r'?1:2)}
+  $('lr').onclick=function(){rank('r')};$('lw').onclick=function(){rank('w')};rank('r');
+
+  // top10 (공동 순위제: 3,3,3 다음은 6위)
+  var ids=['abc','kja','mis','shd','dyf','jwg','hah','ynq','pkw','cre'];
+  var TOP={a:{rk:[1,2,3,3,3,6,7,8,9,10],v:['148일','146일','141일','139일','135일','132일','130일','127일','125일','122일'],me:'45일'},
+           t:{rk:[1,2,3,4,5,6,7,8,9,10],v:['412h','398h','376h','361h','350h','342h','331h','325h','318h','309h'],me:'120h'}};
+  function drawTop(k){var T=TOP[k],ul=$('top');ul.textContent='';
+    ids.forEach(function(id,i){var li=el('li');li.appendChild(el('span','r'+(T.rk[i]<=3?' t3':''),String(T.rk[i])));li.appendChild(el('span','',id+'***'));li.appendChild(el('b','',T.v[i]));ul.appendChild(li)});
+    var me=el('li','me');me.appendChild(el('span','','123'));me.appendChild(el('span','','mega011 (나)'));me.appendChild(el('span','',T.me));ul.appendChild(me);pressed($('ta'),$('tt'),k==='a'?1:2)}
+  $('ta').onclick=function(){drawTop('a')};$('tt').onclick=function(){drawTop('t')};drawTop('a');
+
+  // comments
+  var cm=[['kja***','3분 전','다들 화이팅! 오늘도 한 강의씩 해봐요'],['mis***','12분 전','민법 진도 따라잡는 중입니다. 같이 힘내요'],['shd***','1시간 전','출석 30일 달성했어요! 여러분도 조금만 더!'],['dyf***','2시간 전','시험까지 꾸준히 가보자고요'],['jwg***','4시간 전','특허법 한 번 더 돌렸습니다. 합격까지 파이팅'],['hah***','어제','오늘 3시간 채웠어요. 모두 수고했어요'],['ynq***','어제','물리가 제일 어렵네요... 그래도 포기 안 해요'],['pkw***','2026.10.14','상표법 기본강의 끝! 다음은 디자인보호법'],['cre***','2026.10.13','같이 합격해요!'],['abc***','2026.10.13','슬럼프가 와도 출석은 지키기!'],['lee***','2026.10.12','다들 건강 챙기며 공부해요']];
+  var shown=5,posted=0,armed=null;
+  function drawCm(){var ul=$('cmList');ul.textContent='';
+    cm.slice(0,shown).forEach(function(c,idx){var li=el('li',c[0]==='mega011 (나)'?'mine':'');var h=el('div','h');h.appendChild(el('b','',c[0]));h.appendChild(el('span','',c[1]));
+      if(c[0]==='mega011 (나)'){var d=el('button','del','삭제');d.setAttribute('aria-label','내 응원 한마디 삭제');d.onclick=function(){if(armed===c){cm.splice(cm.indexOf(c),1);armed=null;drawCm()}else{armed=c;d.textContent='한 번 더 누르면 삭제돼요'}};h.appendChild(d)}
+      li.appendChild(h);li.appendChild(el('p','',c[2]));ul.appendChild(li)});
+    $('cmCnt').textContent=cm.length.toLocaleString();$('cmMore').hidden=shown>=cm.length}
+  $('cmMore').onclick=function(){shown+=5;drawCm()};
+  var inp=$('cmIn');
+  inp.oninput=function(){$('cmLen').textContent=inp.value.length+'/100';$('cmBtn').disabled=!inp.value.trim()};
+  $('cmBtn').onclick=function(){
+    if(posted>=1){$('cmMsg').textContent='하루 한 번만 작성할 수 있어요.';return}
+    cm.unshift(['mega011 (나)','방금 전',inp.value.trim()]);posted++;inp.value='';inp.oninput();shown=Math.max(shown,5);drawCm()};
+  drawCm();
+})();
+</script>
+</body>
+</html>
